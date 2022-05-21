@@ -1,4 +1,4 @@
-package eg.edu.alexu.csd.filestructure.btree;
+package com.company;
 
 public interface ISearchResult {
 
