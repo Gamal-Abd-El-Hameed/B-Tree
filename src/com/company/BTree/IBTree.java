@@ -1,10 +1,12 @@
-package com.company;
+package com.company.BTree;
+
+import com.company.BTreeNode.IBTreeNode;
 
 public interface IBTree<K extends Comparable<K>, V> {
 
 	/**
 	 * Return the minimum degree of the given Btree. 
-	 * The minimum degree of the Btree is sent as a parameter t the constructor.
+	 * The minimum degree of the Btree is sent as a parameter to the constructor.
 	 * @return
 	 */
 	public int getMinimumDegree();
