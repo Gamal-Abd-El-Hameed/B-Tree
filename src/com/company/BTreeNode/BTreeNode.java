@@ -94,28 +94,27 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
      * traverse all nodes in a subtree rooted with this node in inorder traversal
      */
     public void traverse() {
-//        int i;
-//        // traverse through all keys and children except last child
-//        for (i = 0; i < numOfKeys; i++) {
-//            // If not leaf, traverse the subtree rooted ont its left first
-//            if (!isLeaf)
-//                children.get(i).traverse();
-//            // print the key
-//            System.out.println(keys.get(i) + ", " + values.get(i) + ", #keys = " + numOfKeys
-//             + ", children:");
-//            for(int j = 0; j < children.size(); j++) {
-//                System.out.println("child " + j + " --> " + children.get(j).getKeys());
-//            }
-//            System.out.println("-------------------");
-//        }
-//
-//        // Print the subtree rooted with last child
-//        if (!isLeaf)
-//            children.get(i).traverse();
+
         System.out.println("Node\n\tDegree: "+this.minimumDegree+"\tLeaf: "+ this.isLeaf+"\tNumberOfKeys: "+ this.numOfKeys+"\n\tKeys: "+this.getKeys().toString()+"\n\tValues: "+this.getValues().toString()+"\tNumberOfChildren: "+this.getChildren().size());
         for(int i=0;i<this.getChildren().size();i++){
             System.out.println();
             this.getChildren().get(i).traverse();
+//         int i;
+//         // traverse through all keys and children except last child
+//         for (i = 0; i < numOfKeys; i++) {
+//             // If not leaf, traverse the subtree rooted ont its left first
+//             if (!isLeaf)
+//                 children.get(i).traverse();
+//             // print the key
+//             System.out.println(keys.get(i) + ", " + values.get(i) + ", #keys = " + numOfKeys
+//              + ", children:");
+//             for(int j = 0; j < children.size(); j++) {
+//                 System.out.println("child " + j);
+//                 System.out.println("keys:--> " + children.get(j).getKeys());
+//                 System.out.println("values:--> " + children.get(j).getValues());
+//             }
+//             System.out.println("-------------------");
+
         }
     }
 
