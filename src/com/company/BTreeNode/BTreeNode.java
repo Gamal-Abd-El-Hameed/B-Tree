@@ -16,33 +16,35 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
         this.numOfKeys = 0;
         this.isLeaf = leaf;
         // new list of children
-        this.children = new ArrayList<>(2 * degree);
+        this.children = new ArrayList<>();
         // new list of keys
-        this.keys = new ArrayList<>(2 * degree - 1);
+        this.keys = new ArrayList<>();
         // new list of values
-        this.values = new ArrayList<>(2 * degree - 1);
+        this.values = new ArrayList<>();
     }
 
     public BTreeNode(int degree, boolean leaf, K key, V value) {
         this.minimumDegree = degree;
         this.isLeaf = leaf;
         // new list of children
-        children = new ArrayList<>(2 * degree);
+        children = new ArrayList<>();
         // new list of keys
-        keys = new ArrayList<>(2 * degree - 1);
+        keys = new ArrayList<>();
         // add the key to the list
-        keys.set(0, key);
+        keys.add(key);
         numOfKeys = 1; // Update number of keys
         // new list of values
-        values = new ArrayList<>(2 * degree - 1);
+        values = new ArrayList<>();
         // add the value to the list
-        values.set(0, value);
+        values.add(value);
     }
 
     public void insertNonFull(K key, V value) {
         int i = numOfKeys - 1;
         // If this is a leaf node
         if (isLeaf) {
+            // temp addition to increase list size by one
+            keys.add(key); values.add(value);
             // find the location of new key
             while (i >= 0 && keys.get(i).compareTo(key) > 0) {
                 keys.set(i + 1, keys.get(i));
@@ -59,9 +61,9 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
             while (i >= 0 && keys.get(i).compareTo(key) > 0)
                 i--;
             // if the child is full
-            if(children.get(i + 1).numOfKeys == 2 * minimumDegree - 1){
+            if(children.get(i + 1).numOfKeys == 2 * minimumDegree - 1) {
                 // If the child is full, split it
-                splitChild(i+1, children.get(i + 1));
+                splitChild(i + 1, children.get(i + 1));
 
                 // which of the two children will have the new key
                 if (keys.get(i + 1).compareTo(key) < 0)
@@ -76,30 +78,39 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
         newNode.numOfKeys = minimumDegree - 1;
 
         // Copy the last (t - 1) keys of current node to the new node
-        for (int j = 0; j < minimumDegree - 1; j++)
-            newNode.getKeys().set(j, current.getKeys().get(j + minimumDegree));
+        for (int j = 0; j < minimumDegree - 1; j++) {
+            newNode.getKeys().add(current.getKeys().get(j + minimumDegree));
+            newNode.getValues().add(current.getValues().get(j + minimumDegree));
+        }
+            
 
         // Copy the last t children of current node to the new node
         if (!current.isLeaf())
             for (int j = 0; j < minimumDegree; j++)
-                newNode.getChildren().set(j, current.getChildren().get(j + minimumDegree));
+                newNode.getChildren().add(current.getChildren().get(j + minimumDegree));
 
         // Reduce the number of keys in current node
         current.numOfKeys = minimumDegree - 1;
 
         // create space of new child
-        for (int j = minimumDegree; j >= position + 1; j--)
+        children.add(newNode); // temporary addition
+        // System.out.println("children size = " + children.size() + "numOfKeys = " + numOfKeys);
+        for (int j = numOfKeys; j >= position + 1; j--)
             children.set(j + 1, children.get(j));
 
         // Link the new child to this node
         children.set(position + 1, newNode);
 
         // find the location of new key and move all greater keys one space ahead
-        for (int j = minimumDegree - 1; j >= position; j--)
+        keys.add(null); values.add(null);
+        for (int j = numOfKeys - 1; j >= position; j--) {
             keys.set(j + 1, keys.get(j));
+            values.set(j + 1, values.get(j));
+        }            
 
         // Copy the middle key of y to this node
         keys.set(position, (K)current.getKeys().get(minimumDegree - 1));
+        values.set(position, (V)current.getValues().get(minimumDegree - 1));
 
         // Increment count of keys in this node
         numOfKeys++;
@@ -116,7 +127,7 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
             if (!isLeaf)
                 children.get(i).traverse();
             // print the key
-            System.out.println(" " + keys.get(i));
+            System.out.println(keys.get(i) + ", " + values.get(i));
         }
 
         // Print the subtree rooted with last child
