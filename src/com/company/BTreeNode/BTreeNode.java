@@ -104,7 +104,9 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
             System.out.println(keys.get(i) + ", " + values.get(i) + ", #keys = " + numOfKeys
              + ", children:");
             for(int j = 0; j < children.size(); j++) {
-                System.out.println("child " + j + " --> " + children.get(j).getKeys());
+                System.out.println("child " + j);
+                System.out.println("keys:--> " + children.get(j).getKeys());
+                System.out.println("values:--> " + children.get(j).getValues());
             }
             System.out.println("-------------------");
         }
