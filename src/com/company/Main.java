@@ -12,13 +12,6 @@ public class Main {
         t.insert(12, "Farrag");
         t.insert(30, "Gamal");
         t.insert(7, "FAANG");
-        t.insert(10, "Mo");
-        t.insert(20, "Fawzy");
-        t.insert(5, "Abbas");
-        t.insert(6, "Nour");
-        t.insert(12, "Farrag");
-        t.insert(30, "Gamal");
-        t.insert(7, "FAANG");
         System.out.println("Traversal of the constructed tree is ");
         t.traverse();
     }
