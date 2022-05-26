@@ -32,7 +32,7 @@ public class BTree <K extends Comparable<K>, V> implements IBTree {
 //    public void insert(K key, V value);
     public void insert(Comparable key, Object value) {
         // if the node already exists
-//        if(search(key) != null) return;
+        if(root != null && search(key) != null ) return;
         // if tree is empty
         if (root == null)
             root = new BTreeNode(minimumDegree, true, key, value);

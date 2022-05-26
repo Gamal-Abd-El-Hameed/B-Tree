@@ -120,19 +120,24 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
      * traverse all nodes in a subtree rooted with this node in inorder traversal
      */
     public void traverse() {
-        int i;
-        // traverse through all keys and children except last child
-        for (i = 0; i < numOfKeys; i++) {
-            // If not leaf, traverse the subtree rooted ont its left first
-            if (!isLeaf)
-                children.get(i).traverse();
-            // print the key
-            System.out.println(keys.get(i) + ", " + values.get(i));
+//        int i;
+//        // traverse through all keys and children except last child
+//        for (i = 0; i < numOfKeys; i++) {
+//            // If not leaf, traverse the subtree rooted ont its left first
+//            if (!isLeaf)
+//                children.get(i).traverse();
+//            // print the key
+//            System.out.println(keys.get(i) + ", " + values.get(i));
+//        }
+//
+//        // Print the subtree rooted with last child
+//        if (!isLeaf)
+//            children.get(i).traverse();
+        System.out.println("Node\n\tNumber Of Keys: "+ this.numOfKeys +"\n\tkeys: " + this.getKeys().toString() + "\n\tValues: " + this.getValues() + "\n\tChildren Size: " + this.getChildren().size());
+        for(int i=0;i<this.getChildren().size();i++){
+            System.out.println("Child "+i);
+            this.getChildren().get(i).traverse();
         }
-
-        // Print the subtree rooted with last child
-        if (!isLeaf)
-            children.get(i).traverse();
     }
 
     public V searchInBTree(K key){
@@ -140,9 +145,9 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
 
         if(node == null) return null;
 
-        for(int i=0; i < this.getNumOfKeys(); i++){
-            if (key.compareTo(keys.get(i)) == 0)
-                return this.getValues().get(i);
+        for(int i=0; i < node.getNumOfKeys(); i++){
+            if (key.compareTo(node.getKeys().get(i)) == 0)
+                return node.getValues().get(i);
         }
         return null;
     }
