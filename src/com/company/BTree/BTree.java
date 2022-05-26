@@ -32,7 +32,7 @@ public class BTree <K extends Comparable<K>, V> implements IBTree {
 //    public void insert(K key, V value);
     public void insert(Comparable key, Object value) {
         // if the node already exists
-        if(isExist((K)key, (V)value)) return;
+//        if(search(key) != null) return;
         // if tree is empty
         if (root == null)
             root = new BTreeNode(minimumDegree, true, key, value);
@@ -40,11 +40,11 @@ public class BTree <K extends Comparable<K>, V> implements IBTree {
         else { // If tree is not empty
             // If root is full
             if (root.getNumOfKeys() == 2 * minimumDegree - 1) {
-                BTreeNode<K,V> newRoot = new BTreeNode(minimumDegree, false, key, value);
+                BTreeNode<K,V> newRoot = new BTreeNode(minimumDegree, false);
                 // new list of children
-                List<BTreeNode<K, V>> children = new ArrayList<>(2 * minimumDegree);
+                List<BTreeNode<K, V>> children = new ArrayList<>();
                 // Make old root as child of new root
-                children.set(0, root);
+                children.add(root);
                 // set the keys of the root
                 newRoot.setChildren(children);
                 // Split the old root and move 1 key to the new root
@@ -61,11 +61,6 @@ public class BTree <K extends Comparable<K>, V> implements IBTree {
             else // If root is not full, call insertNonFull for root
                 root.insertNonFull((K)key, (V)value);
         }
-    }
-
-    // Same as search but return boolean
-    private boolean isExist(K key, V value) {
-        return false;
     }
 
     @Override
