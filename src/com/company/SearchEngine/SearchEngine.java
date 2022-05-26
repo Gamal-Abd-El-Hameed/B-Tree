@@ -1,5 +1,6 @@
-package com.company;
+package com.company.SearchEngine;
 
+import com.company.BTree.IBTree;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
