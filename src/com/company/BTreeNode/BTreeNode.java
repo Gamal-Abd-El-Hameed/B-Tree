@@ -161,7 +161,7 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
 
     public int posOfKeyInNode(BTreeNode<K,V> node,K key){
         int i=0;
-        for (i = 0; i < numOfKeys; i++) {
+        for (i = 0; i < node.numOfKeys; i++) {
             if (node.getKeys().get(i) == key) {
                 break;
             }

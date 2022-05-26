@@ -26,9 +26,11 @@ public class Main {
         t.insert(4, "d");
 
         t.insert(6, "f");
+        t.insert(26, "z");
         t.insert(7, "g");
         t.insert(3, "c");
         t.insert(2, "b");
+        t.insert(25, "y");
         t.insert(9, "i");
         t.insert(5, "e");
 
@@ -36,16 +38,19 @@ public class Main {
         t.insert(21, "u");
         t.insert(12, "l");
         t.insert(18, "r");
+        t.insert(24, "x");
         t.insert(10, "j");
 
 
         t.insert(15, "o");
         t.insert(16, "p");
         t.insert(17, "q");
+        t.insert(23, "w");
 
         t.insert(19, "s");
         t.insert(13, "m");
         t.insert(20, "t");
+        t.insert(22, "v");
 
         System.out.println("Traversal of the constructed tree is ");
         t.traverse();
