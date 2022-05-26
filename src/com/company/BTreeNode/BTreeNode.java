@@ -94,26 +94,28 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
      * traverse all nodes in a subtree rooted with this node in inorder traversal
      */
     public void traverse() {
-        int i;
-        // traverse through all keys and children except last child
-        for (i = 0; i < numOfKeys; i++) {
-            // If not leaf, traverse the subtree rooted ont its left first
-            if (!isLeaf)
-                children.get(i).traverse();
-            // print the key
-            System.out.println(keys.get(i) + ", " + values.get(i) + ", #keys = " + numOfKeys
-             + ", children:");
-            for(int j = 0; j < children.size(); j++) {
-                System.out.println("child " + j);
-                System.out.println("keys:--> " + children.get(j).getKeys());
-                System.out.println("values:--> " + children.get(j).getValues());
-            }
-            System.out.println("-------------------");
-        }
 
-        // Print the subtree rooted with last child
-        if (!isLeaf)
-            children.get(i).traverse();
+        System.out.println("Node\n\tDegree: "+this.minimumDegree+"\tLeaf: "+ this.isLeaf+"\tNumberOfKeys: "+ this.numOfKeys+"\n\tKeys: "+this.getKeys().toString()+"\n\tValues: "+this.getValues().toString()+"\tNumberOfChildren: "+this.getChildren().size());
+        for(int i=0;i<this.getChildren().size();i++){
+            System.out.println();
+            this.getChildren().get(i).traverse();
+//         int i;
+//         // traverse through all keys and children except last child
+//         for (i = 0; i < numOfKeys; i++) {
+//             // If not leaf, traverse the subtree rooted ont its left first
+//             if (!isLeaf)
+//                 children.get(i).traverse();
+//             // print the key
+//             System.out.println(keys.get(i) + ", " + values.get(i) + ", #keys = " + numOfKeys
+//              + ", children:");
+//             for(int j = 0; j < children.size(); j++) {
+//                 System.out.println("child " + j);
+//                 System.out.println("keys:--> " + children.get(j).getKeys());
+//                 System.out.println("values:--> " + children.get(j).getValues());
+//             }
+//             System.out.println("-------------------");
+
+        }
     }
 
     public V searchInBTree(K key){
@@ -121,14 +123,14 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
 
         if(node == null) return null;
 
-        for(int i=0; i < this.getNumOfKeys(); i++){
-            if (key.compareTo(keys.get(i)) == 0)
-                return this.getValues().get(i);
+        for(int i=0; i < node.getNumOfKeys(); i++){
+            if (key.compareTo(node.getKeys().get(i)) == 0)
+                return node.getValues().get(i);
         }
         return null;
     }
 
-    public BTreeNode<K,V> searchForTheNode(K key){
+    private BTreeNode<K,V> searchForTheNode(K key){
         int i=0;
         List<K> keys = this.getKeys();
 
@@ -143,7 +145,7 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
         else return getChildren().get(i).searchForTheNode(key);
     }
 
-    public BTreeNode<K,V> parentOfNode (BTreeNode<K,V> node){
+    private BTreeNode<K,V> parentOfNode (BTreeNode<K,V> node){
         if(this.isLeaf)
             return null;
 
@@ -161,7 +163,7 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
         return null;
     }
 
-    public int posOfKeyInNode(BTreeNode<K,V> node,K key){
+    private int posOfKeyInNode(BTreeNode<K,V> node,K key){
         int i=0;
         for (i = 0; i < node.numOfKeys; i++) {
             if (node.getKeys().get(i) == key) {
@@ -171,109 +173,268 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
         return i;
     }
 
-    public void remove(K key){
-        BTreeNode<K,V> currentNode = searchForTheNode(key);
-        BTreeNode<K,V> parentNode = this.parentOfNode(currentNode);
-        BTreeNode<K,V> neighbourNode;
-
-        int keyPos = posOfKeyInNode(currentNode, key);
-
-        if(currentNode.isLeaf) {
-            if (currentNode.numOfKeys - 1 >= currentNode.minimumDegree - 1) {
-                currentNode.getKeys().remove(keyPos);
-                currentNode.getValues().remove(keyPos);
-                currentNode.numOfKeys--;
-            }else{
-                int pos = findPosInParentChildren(parentNode, currentNode);
-                if(pos-1 >=0 && parentNode.getChildren().get(pos-1).numOfKeys >= currentNode.minimumDegree) {
-                    neighbourNode = parentNode.getChildren().get(pos - 1);
-
-                    K keyToMoveUp = neighbourNode.getKeys().get(neighbourNode.getKeys().size()-1);
-                    V valueToMoveUp = neighbourNode.getValues().get(neighbourNode.getValues().size()-1);
-                    K keyToMoveDown = parentNode.getKeys().get(pos - 1);
-                    V valueToMoveDown = parentNode.getValues().get(pos - 1);
-
-                    neighbourNode.getKeys().remove(neighbourNode.getKeys().size()-1);
-                    neighbourNode.getValues().remove(neighbourNode.getValues().size()-1);
-                    neighbourNode.numOfKeys--;
-                    parentNode.getKeys().set(pos - 1, keyToMoveUp);
-                    parentNode.getValues().set(pos - 1, valueToMoveUp);
-
-                    currentNode.getKeys().set(keyPos, keyToMoveDown);
-                    currentNode.getValues().set(keyPos, valueToMoveDown);
-                }else if(pos <= parentNode.getChildren().size()-1 && parentNode.getChildren().get(pos+1).numOfKeys >= currentNode.minimumDegree){
-                    neighbourNode = parentNode.getChildren().get(pos + 1);
-
-                    K keyToMoveUp = neighbourNode.getKeys().get(0);
-                    V valueToMoveUp = neighbourNode.getValues().get(0);
-                    K keyToMoveDown = parentNode.getKeys().get(pos);
-                    V valueToMoveDown = parentNode.getValues().get(pos);
-
-                    neighbourNode.getKeys().remove(0);
-                    neighbourNode.getValues().remove(0);
-                    neighbourNode.numOfKeys--;
-                    parentNode.getKeys().set(pos, keyToMoveUp);
-                    parentNode.getValues().set(pos, valueToMoveUp);
-
-                    currentNode.getKeys().set(keyPos, keyToMoveDown);
-                    currentNode.getValues().set(keyPos, valueToMoveDown);
-                }else{
-                    currentNode.getKeys().remove(keyPos);
-                    currentNode.getValues().remove(keyPos);
-                    List<K> newKeys = new ArrayList<>();
-                    List<V> newValues = new ArrayList<>();
-                    currentNode.numOfKeys--;
-                    if(pos - 1 >= 0){
-                        K keyToMoveDown = parentNode.getKeys().get(pos - 1);
-                        V valueToMoveDown = parentNode.getValues().get(pos - 1);
-
-                        neighbourNode = parentNode.getChildren().get(pos - 1);
-                        newKeys.addAll(neighbourNode.getKeys());
-                        newValues.addAll(neighbourNode.getValues());
-                        newKeys.add(keyToMoveDown);
-                        newValues.add(valueToMoveDown);
-                        for(int i=0; i<currentNode.numOfKeys;i++){
-                            newKeys.add(currentNode.getKeys().get(i));
-                            newValues.add(currentNode.getValues().get(i));
-                        }
-                        currentNode.setKeys(newKeys);
-                        currentNode.setValues(newValues);
-                        parentNode.getChildren().remove(pos-1);
-                        parentNode.getKeys().remove(pos-1);
-                        parentNode.getValues().remove(pos-1);
-                        parentNode.numOfKeys--;
-                    }else if (pos <= parentNode.getChildren().size()-1){
-                        K keyToMoveDown = parentNode.getKeys().get(pos);
-                        V valueToMoveDown = parentNode.getValues().get(pos);
-
-                        neighbourNode = parentNode.getChildren().get(pos + 1);
-                        newKeys.addAll(neighbourNode.getKeys());
-                        newValues.addAll(neighbourNode.getValues());
-                        newKeys.add(keyToMoveDown);
-                        newValues.add(valueToMoveDown);
-                        for(int i=0; i<currentNode.numOfKeys;i++){
-                            newKeys.add(currentNode.getKeys().get(i));
-                            newValues.add(currentNode.getValues().get(i));
-                        }
-                        currentNode.setKeys(newKeys);
-                        currentNode.setValues(newValues);
-                        parentNode.getChildren().remove(pos + 1);
-                        parentNode.getKeys().remove(pos);
-                        parentNode.getValues().remove(pos);
-                        parentNode.numOfKeys--;
-                    }
-                }
-            }
-        }
-    }
-
-    public int findPosInParentChildren(BTreeNode parentNode, BTreeNode childNode){
+    private int PosInParentChildren(BTreeNode<K,V> parentNode, BTreeNode<K,V> childNode){
         int i;
         for(i=0; i < parentNode.getChildren().size(); i++){
             if (parentNode.getChildren().get(i) == childNode)
                 break;
         }
         return i;
+    }
+
+    private BTreeNode<K,V> getPredecessorNode(BTreeNode<K,V> node){
+        if(node.isLeaf) return node;
+        else return getPredecessorNode(node.getChildren().get(node.getChildren().size()-1));
+    }
+
+    private V getPredecessorValue(BTreeNode<K,V> node){
+        List<V> nodeValues = node.getValues();
+        return nodeValues.get(nodeValues.size()-1);
+    }
+
+    private K getPredecessorKey(BTreeNode<K,V> node){
+        List<K> nodeKeys = node.getKeys();
+        return nodeKeys.get(nodeKeys.size()-1);
+    }
+
+    private BTreeNode<K,V> getSuccessorNode(BTreeNode<K,V> node){
+        if(node.isLeaf) return node;
+        else return getPredecessorNode(node.getChildren().get(0));
+    }
+
+    private V getSuccessorValue(BTreeNode<K,V> node){
+        List<V> nodeValues = node.getValues();
+        return nodeValues.get(0);
+    }
+
+    private K getSuccessorKeys(BTreeNode<K,V> node){
+        List<K> nodeKeys = node.getKeys();
+        return nodeKeys.get(0);
+    }
+
+    private void checkIfMin(BTreeNode<K,V> currentNode, int keyPos){
+        BTreeNode<K,V> parentNode= this.parentOfNode(currentNode);
+        BTreeNode<K,V> neighbourNode;
+        BTreeNode<K,V> leftChild;
+        BTreeNode<K,V> rightChild;
+        if(parentNode == null || currentNode.numOfKeys >= currentNode.minimumDegree - 1){
+            return;
+        }else{
+            int childPos = PosInParentChildren(parentNode, currentNode);
+
+            if(childPos - 1 >= 0 && parentNode.getChildren().get(childPos-1).numOfKeys - 1 >= currentNode.minimumDegree - 1) {
+                neighbourNode = parentNode.getChildren().get(childPos - 1);
+                V valueToMoveUp = neighbourNode.getValues().get(neighbourNode.getValues().size()-1);
+                K keyToMoveUp = neighbourNode.getKeys().get(neighbourNode.getKeys().size()-1);
+                V valueToMoveDown = parentNode.getValues().get(parentNode.getValues().size()-1);
+                K keyToMoveDown = parentNode.getKeys().get(parentNode.getKeys().size()-1);
+
+                BTreeNode<K,V> childNode = neighbourNode.getChildren().get(neighbourNode.getChildren().size()-1);
+                neighbourNode.getChildren().remove(neighbourNode.getChildren().size()-1);
+
+                currentNode.getKeys().add(0,keyToMoveDown);
+                currentNode.getValues().add(0,valueToMoveDown);
+
+                parentNode.getKeys().remove(parentNode.getKeys().size()-1);
+                parentNode.getValues().remove(parentNode.getValues().size()-1);
+                parentNode.getKeys().add(0,keyToMoveUp);
+                parentNode.getValues().add(0,valueToMoveUp);
+
+                neighbourNode.getValues().remove(neighbourNode.getValues().size()-1);
+                neighbourNode.getKeys().remove(neighbourNode.getKeys().size()-1);
+                neighbourNode.numOfKeys--;
+
+                leftChild = currentNode.getChildren().get(keyPos);
+                rightChild = currentNode.getChildren().get(keyPos+1);
+
+                rightChild.getValues().addAll(0,leftChild.getValues());
+                rightChild.getKeys().addAll(0,leftChild.getKeys());
+                currentNode.getChildren().set(keyPos,childNode);
+
+            }else if(childPos + 1 < parentNode.getChildren().size() && parentNode.getChildren().get(childPos+1).numOfKeys - 1 >= currentNode.minimumDegree - 1){
+                neighbourNode = parentNode.getChildren().get(childPos + 1);
+                V valueToMoveUp = neighbourNode.getValues().get(0);
+                K keyToMoveUp = neighbourNode.getKeys().get(0);
+                V valueToMoveDown = parentNode.getValues().get(0);
+                K keyToMoveDown = parentNode.getKeys().get(0);
+
+                BTreeNode<K,V> childNode = neighbourNode.getChildren().get(0);
+                neighbourNode.getChildren().remove(0);
+
+                currentNode.getKeys().add(keyToMoveDown);
+                currentNode.getValues().add(valueToMoveDown);
+
+                parentNode.getKeys().remove(0);
+                parentNode.getValues().remove(0);
+                parentNode.getKeys().add(keyToMoveUp);
+                parentNode.getValues().add(valueToMoveUp);
+
+                neighbourNode.getValues().remove(0);
+                neighbourNode.getKeys().remove(0);
+                neighbourNode.numOfKeys--;
+
+                leftChild = currentNode.getChildren().get(keyPos);
+                rightChild = currentNode.getChildren().get(keyPos+1);
+
+                leftChild.getValues().addAll(rightChild.getValues());
+                leftChild.getKeys().addAll(rightChild.getKeys());
+                currentNode.getChildren().set(keyPos+1,childNode);
+            }else{
+                if(childPos - 1>=0){
+
+                }else if(childPos + 1 < parentNode.getChildren().size()){
+
+                }
+            }
+        }
+    }
+
+    public void remove(K key){
+        BTreeNode<K,V> currentNode = searchForTheNode(key);
+        if(currentNode == null) return;
+        BTreeNode<K,V> parentNode = this.parentOfNode(currentNode);
+        BTreeNode<K,V> neighbourNode;
+
+        int keyPos = posOfKeyInNode(currentNode, key);
+
+        if(currentNode.isLeaf) {
+            if (currentNode.numOfKeys - 1 >= currentNode.minimumDegree - 1 || parentNode == null) {
+                currentNode.getKeys().remove(keyPos);
+                currentNode.getValues().remove(keyPos);
+                currentNode.numOfKeys--;
+            }else{
+                int childPos = PosInParentChildren(parentNode, currentNode);
+                if(childPos - 1 >= 0 && parentNode.getChildren().get(childPos-1).numOfKeys - 1 >= currentNode.minimumDegree - 1) {
+                    neighbourNode = parentNode.getChildren().get(childPos - 1);
+
+                    K keyToMoveUp = neighbourNode.getKeys().get(neighbourNode.numOfKeys-1);
+                    V valueToMoveUp = neighbourNode.getValues().get(neighbourNode.numOfKeys-1);
+                    K keyToMoveDown = parentNode.getKeys().get(childPos - 1);
+                    V valueToMoveDown = parentNode.getValues().get(childPos - 1);
+
+                    neighbourNode.getKeys().remove(neighbourNode.numOfKeys-1);
+                    neighbourNode.getValues().remove(neighbourNode.numOfKeys-1);
+                    neighbourNode.numOfKeys--;
+
+                    parentNode.getKeys().set(childPos - 1, keyToMoveUp);
+                    parentNode.getValues().set(childPos - 1, valueToMoveUp);
+
+                    currentNode.getKeys().set(keyPos, keyToMoveDown);
+                    currentNode.getValues().set(keyPos, valueToMoveDown);
+                }else if(childPos + 1 < parentNode.getChildren().size() && parentNode.getChildren().get(childPos+1).numOfKeys - 1 >= currentNode.minimumDegree - 1){
+                    neighbourNode = parentNode.getChildren().get(childPos + 1);
+
+                    K keyToMoveUp = neighbourNode.getKeys().get(0);
+                    V valueToMoveUp = neighbourNode.getValues().get(0);
+                    K keyToMoveDown = parentNode.getKeys().get(childPos);
+                    V valueToMoveDown = parentNode.getValues().get(childPos);
+
+                    neighbourNode.getKeys().remove(0);
+                    neighbourNode.getValues().remove(0);
+                    neighbourNode.numOfKeys--;
+
+                    parentNode.getKeys().set(childPos, keyToMoveUp);
+                    parentNode.getValues().set(childPos, valueToMoveUp);
+
+                    currentNode.getKeys().set(keyPos, keyToMoveDown);
+                    currentNode.getValues().set(keyPos, valueToMoveDown);
+                }else{
+                    currentNode.getKeys().remove(keyPos);
+                    currentNode.getValues().remove(keyPos);
+                    currentNode.numOfKeys--;
+
+                    List<K> newKeys = new ArrayList<>();
+                    List<V> newValues = new ArrayList<>();
+
+                    if(childPos - 1 >= 0){
+                        K keyToMoveDown = parentNode.getKeys().get(childPos - 1);
+                        V valueToMoveDown = parentNode.getValues().get(childPos - 1);
+
+                        neighbourNode = parentNode.getChildren().get(childPos - 1);
+                        newKeys.addAll(neighbourNode.getKeys());
+                        newValues.addAll(neighbourNode.getValues());
+                        newKeys.add(keyToMoveDown);
+                        newValues.add(valueToMoveDown);
+                        newKeys.addAll(currentNode.getKeys());
+                        newValues.addAll(currentNode.getValues());
+
+                        currentNode.setKeys(newKeys);
+                        currentNode.setValues(newValues);
+                        currentNode.numOfKeys = currentNode.getValues().size();
+
+                        parentNode.getChildren().remove(childPos-1);
+                        parentNode.getKeys().remove(childPos-1);
+                        parentNode.getValues().remove(childPos-1);
+                        parentNode.numOfKeys--;
+                        checkIfMin(currentNode, keyPos);
+                    }else if (childPos + 1 < parentNode.getChildren().size()){
+                        K keyToMoveDown = parentNode.getKeys().get(childPos);
+                        V valueToMoveDown = parentNode.getValues().get(childPos);
+                        newKeys.addAll(currentNode.getKeys());
+                        newValues.addAll(currentNode.getValues());
+                        newKeys.add(keyToMoveDown);
+                        newValues.add(valueToMoveDown);
+
+                        neighbourNode = parentNode.getChildren().get(childPos + 1);
+
+                        newKeys.addAll(neighbourNode.getKeys());
+                        newValues.addAll(neighbourNode.getValues());
+                        currentNode.setKeys(newKeys);
+                        currentNode.setValues(newValues);
+                        currentNode.numOfKeys = currentNode.getValues().size();
+
+                        parentNode.getChildren().remove(childPos + 1);
+                        parentNode.getKeys().remove(childPos);
+                        parentNode.getValues().remove(childPos);
+                        parentNode.numOfKeys--;
+                        checkIfMin(currentNode, keyPos);
+                    }
+                }
+            }
+        }else{
+            BTreeNode<K, V> predecessorNode = getPredecessorNode(currentNode);
+            BTreeNode<K, V> successorNode = getSuccessorNode(currentNode);
+
+            if(predecessorNode.numOfKeys - 1 >= predecessorNode.minimumDegree - 1){
+                V newValue = getPredecessorValue(predecessorNode);
+                K newKey = getPredecessorKey(predecessorNode);
+                currentNode.getKeys().set(keyPos, newKey);
+                currentNode.getValues().set(keyPos, newValue);
+                predecessorNode.remove(newKey);
+            }else if(successorNode.numOfKeys - 1 >= successorNode.minimumDegree - 1){
+                V newValue = getSuccessorValue(successorNode);
+                K newKey = getSuccessorKeys(successorNode);
+                currentNode.getKeys().set(keyPos, newKey);
+                currentNode.getValues().set(keyPos, newValue);
+                successorNode.remove(newKey);
+            }else{
+                List<K> newKeys = new ArrayList<>();
+                List<V> newValues = new ArrayList<>();
+                BTreeNode<K,V> leftChild = currentNode.getChildren().get(keyPos);
+                BTreeNode<K,V> rightChild = currentNode.getChildren().get(keyPos + 1);
+                if(currentNode.getChildren().contains(predecessorNode) || currentNode.getChildren().contains(successorNode)){
+
+                    newValues.addAll(leftChild.getValues());
+                    newKeys.addAll(leftChild.getKeys());
+                    newValues.addAll(rightChild.getValues());
+                    newKeys.addAll(rightChild.getKeys());
+                    rightChild.setValues(newValues);
+                    rightChild.setKeys(newKeys);
+
+                    currentNode.getChildren().remove(keyPos);
+                    currentNode.getValues().remove(keyPos);
+                    currentNode.getKeys().remove(keyPos);
+                    currentNode.numOfKeys--;
+                    checkIfMin(currentNode, keyPos);
+                }else{
+                    V newValue = getPredecessorValue(predecessorNode);
+                    K newKey = getPredecessorKey(predecessorNode);
+                    currentNode.getKeys().set(keyPos, newKey);
+                    currentNode.getValues().set(keyPos, newValue);
+                    predecessorNode.remove(newKey);
+                }
+            }
+        }
     }
     @Override
     public int getNumOfKeys() {
