@@ -1,10 +1,9 @@
-package com.company;
+package com.company.BTreeNode;
 
 import java.util.List;
 
 
 public interface IBTreeNode<K extends Comparable<K>, V> {
-
 	/**
 	 * @return the numOfKeys return number of keys in this node.
 	 */
@@ -53,7 +52,5 @@ public interface IBTreeNode<K extends Comparable<K>, V> {
 	/**
 	 * @param children the children to set
 	 */
-	public void setChildren(List<IBTreeNode<K, V>> children);
-
-	
+	public void setChildren(List<IBTreeNode<K, V>> children);	
 }
