@@ -10,6 +10,11 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
     private List<V> values;
     private List<BTreeNode<K, V>> children;
 
+    /**
+     * constructor of BTreeNode
+     * @param degree the minimum degree of the node
+     * @param leaf if the node is leaf or not
+     */
     public BTreeNode(int degree, boolean leaf) {
         this.minimumDegree = degree;
         this.numOfKeys = 0;
@@ -26,8 +31,10 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
      * traverse all nodes in a subtree rooted with this node in inorder traversal
      */
     public void traverse() {
-
-        System.out.println("Node\n\tDegree: "+this.minimumDegree+"\tLeaf: "+ this.isLeaf+"\tNumberOfKeys: "+ this.numOfKeys+"\n\tKeys: "+this.getKeys().toString()+"\n\tValues: "+this.getValues().toString()+"\tNumberOfChildren: "+this.getChildren().size());
+        System.out.println("Node\n\tDegree: " + 
+        this.minimumDegree+"\tLeaf: " + this.isLeaf + "\tNumberOfKeys: " + this.numOfKeys + "\n\tKeys: " + 
+        this.getKeys().toString() + "\n\tValues: " + this.getValues().toString() + "\tNumberOfChildren: " +
+                this.getChildren().size());
         for(int i=0;i<this.getChildren().size();i++){
             System.out.println();
             this.getChildren().get(i).traverse();
@@ -492,7 +499,8 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
                 }
             }
         }
-    }
+    }  
+      
     @Override
     public int getNumOfKeys() {
         return numOfKeys;

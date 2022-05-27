@@ -7,30 +7,21 @@ public class Main {
     public static void main(String[] args) {
         BTree<String, String> t = new BTree<>(3);
 
-        t.insert(15, "a");
-        t.insert(40, "a");
-        t.insert(100, "a");
-        t.insert(25, "a");
-        t.insert(200, "a");
-        t.insert(657, "a");
-        t.insert(120, "a");
-        t.insert(65, "a");
-        t.insert(333, "a");
-        t.insert(444, "a");
-        t.insert(37, "a");
-        t.insert(191, "a");
-        t.insert(222, "a");
-        t.insert(777, "a");
-        t.insert(300, "a");
-        t.insert(420, "a");
-        t.insert(313, "a");
-        t.insert(305, "a");
-        t.insert(229, "a");
-        t.insert(280, "a");
-        t.insert(800, "a");
-        t.insert(900, "a");
-        t.insert(950, "a");
-
+        t.insert(15, "abbas");
+        t.insert(40, "varo");
+        t.insert(100, "alo");
+        t.insert(25, "nour");
+        t.insert(200, "akram");
+        t.insert(657, "ahmad");
+        t.insert(120, "darsh");
+        t.insert(65, "sasa");
+        t.insert(333, "ally");
+        t.insert(444, "kareem");
+        t.insert(37, "zezo");
+        t.insert(191, "maged");
+        t.insert(222, "random");
+        t.insert(777, "mo salah");
+        t.insert(300, "ahly");
 
         System.out.println("Traversal of the constructed tree is ");
         t.traverse();
