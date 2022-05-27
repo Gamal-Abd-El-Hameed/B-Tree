@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchEngine implements ISearchEngine{
+public class SearchEngine implements ISearchEngine {
 
     private final List<String> documentsID;
     private final IBTree<String, String> documents;

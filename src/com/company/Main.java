@@ -1,23 +1,30 @@
 package com.company;
 
 import com.company.BTree.BTree;
+import com.company.SearchEngine.SearchEngine;
 
 public class Main {
     public static void main(String[] args) {
-        BTree<Integer, String> t = new BTree<>(2);
-        t.insert(1, "a");
-        t.insert(11, "k");
-        t.insert(8, "h");
-        t.insert(14, "n");
-        t.insert(4, "d");
+        BTree<String, String> t = new BTree<>(2);
 
-        t.insert(6, "f");
-        t.insert(26, "z");
-        System.out.println("Traversal of the constructed tree is ");
-        t.traverse();
-        t.delete(4);
-        System.out.println("\n\n\nTraversal of the constructed tree is ");
-        t.traverse();
+//        t.insert(1, "a");
+//        t.insert(11, "k");
+//        t.insert(8, "h");
+//        t.insert(14, "n");
+//        t.insert(4, "d");
+//
+//        t.insert(6, "f");
+//        t.insert(4, "d");
+//        t.insert(26, "z");
+//        System.out.println("Traversal of the constructed tree is ");
+//        t.traverse();
+//        System.out.println(t.search(4));
+//        System.out.println(t.delete(8));
+//        System.out.println("\n\n\nTraversal of the constructed tree is ");
+//        t.traverse();
+        SearchEngine engine = new SearchEngine()
+
+
 //        t.insert(7, "g");
 //        t.insert(3, "c");
 //        t.insert(2, "b");
@@ -56,3 +63,7 @@ public class Main {
 
     }
 }
+
+/**
+ * https://teams.microsoft.com/_#/pre-join-calling/19:meeting_NGU1OGFmYTEtZTIwOC00MDljLTljZTQtZjJiZDNiZTk2YTli@thread.v2
+ */

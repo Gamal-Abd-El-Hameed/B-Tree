@@ -30,7 +30,7 @@ public class BTree <K extends Comparable<K>, V> implements IBTree {
     @Override
     public void insert(Comparable key, Object value) {
         // if the node already exists
-//        if(search(key) != null) return;
+        if(search(key) != null) return;
         // If root is full
         if (root.getNumOfKeys() == 2 * minimumDegree - 1) {
             BTreeNode<K,V> r = root;
@@ -57,7 +57,7 @@ public class BTree <K extends Comparable<K>, V> implements IBTree {
         // If this is a leaf node
         if (node.isLeaf()) {
             // temp addition to increase list size by one
-            node.getKeys().add(null); node.getValues().add(null);
+            node.getKeys().add(key); node.getValues().add(value);
             // find the location of new key
             while (i >= 0 && node.getKeys().get(i).compareTo(key) > 0) {
                 node.getKeys().set(i + 1, node.getKeys().get(i));
@@ -103,12 +103,12 @@ public class BTree <K extends Comparable<K>, V> implements IBTree {
                 newNode.getChildren().add(current.getChildren().get(j + minimumDegree));
 
         current.setNumOfKeys(minimumDegree - 1);
-        parent.getChildren().add(null);
+        parent.getChildren().add(newNode);
         for(int j = parent.getNumOfKeys(); j >= position + 1; j--)
             parent.getChildren().set(j + 1, parent.getChildren().get(j));
         parent.getChildren().set(position + 1, newNode);
-        parent.getKeys().add(null);
-        parent.getValues().add(null);
+        parent.getKeys().add((K)current.getKeys().get(minimumDegree - 1));
+        parent.getValues().add((V)current.getValues().get(minimumDegree - 1));
         for (int j = parent.getNumOfKeys() - 1; j >= position; j--) {
             parent.getKeys().set(j + 1, parent.getKeys().get(j));
             parent.getValues().set(j + 1, parent.getValues().get(j));

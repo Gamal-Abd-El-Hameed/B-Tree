@@ -130,7 +130,7 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
         return null;
     }
 
-    private BTreeNode<K,V> searchForTheNode(K key){
+    private BTreeNode<K,V> searchForTheNode(K key) {
         int i=0;
         List<K> keys = this.getKeys();
 
@@ -392,8 +392,8 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
                 }
             }
         }else{
-            BTreeNode<K, V> predecessorNode = getPredecessorNode(currentNode);
-            BTreeNode<K, V> successorNode = getSuccessorNode(currentNode);
+            BTreeNode<K, V> predecessorNode = getPredecessorNode(currentNode.getChildren().get(keyPos));
+            BTreeNode<K, V> successorNode = getSuccessorNode(currentNode.getChildren().get(keyPos+1));
 
             if(predecessorNode.numOfKeys - 1 >= predecessorNode.minimumDegree - 1){
                 V newValue = getPredecessorValue(predecessorNode);
