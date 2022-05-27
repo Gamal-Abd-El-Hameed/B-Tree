@@ -280,10 +280,62 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
                 leftChild.getKeys().addAll(rightChild.getKeys());
                 currentNode.getChildren().set(keyPos+1,childNode);
             }else{
-                if(childPos - 1>=0){
+                if(childPos - 1 >= 0){
+                    BTreeNode<K,V> leftNode = parentNode.getChildren().get(childPos);
+                    parentNode.getValues().addAll(childPos,currentNode.getValues());
+                    parentNode.getValues().addAll(childPos - 1,leftNode.getValues());
+                    parentNode.getKeys().addAll(childPos,currentNode.getKeys());
+                    parentNode.getKeys().addAll(childPos - 1,leftNode.getKeys());
 
+                    parentNode.getChildren().remove(childPos-1);
+                    parentNode.getChildren().addAll(childPos-1, leftNode.getChildren());
+                    if(currentNode.numOfKeys == 0) {
+                        BTreeNode<K, V> rightLeaf = currentNode.getChildren().get(keyPos);
+                        BTreeNode<K, V> leftLeaf = currentNode.getChildren().get(keyPos + 1);
+                        currentNode.getChildren().remove(keyPos);
+                        currentNode.getChildren().remove(keyPos + 1);
+                        parentNode.getChildren().addAll(childPos, currentNode.getChildren());
+
+                        rightLeaf.getKeys().addAll(leftLeaf.getKeys());
+                        rightLeaf.getValues().addAll(leftLeaf.getValues());
+                        rightLeaf.getChildren().addAll(leftLeaf.getChildren());
+
+                        currentNode.setValues(rightLeaf.getValues());
+                        currentNode.setKeys(rightLeaf.getKeys());
+                        currentNode.setChildren(rightLeaf.getChildren());
+                    }else{
+                        parentNode.getChildren().remove(childPos);
+                        parentNode.getChildren().addAll(childPos,currentNode.getChildren());
+                    }
                 }else if(childPos + 1 < parentNode.getChildren().size()){
+                    BTreeNode<K,V> rightNode = parentNode.getChildren().get(childPos + 1);
 
+                    parentNode.getValues().addAll(childPos + 1,rightNode.getValues());
+                    parentNode.getValues().addAll(childPos,currentNode.getValues());
+
+                    parentNode.getKeys().addAll(childPos + 1,rightNode.getKeys());
+                    parentNode.getKeys().addAll(childPos,currentNode.getKeys());
+
+                    parentNode.getChildren().remove(childPos+1);
+                    parentNode.getChildren().addAll(childPos+1, rightNode.getChildren());
+                    if(currentNode.numOfKeys == 0){
+                        BTreeNode<K,V> rightLeaf = currentNode.getChildren().get(keyPos);
+                        BTreeNode<K,V> leftLeaf = currentNode.getChildren().get(keyPos + 1);
+                        currentNode.getChildren().remove(keyPos);
+                        currentNode.getChildren().remove(keyPos+1);
+                        parentNode.getChildren().addAll(childPos,currentNode.getChildren());
+
+                        rightLeaf.getKeys().addAll(leftLeaf.getKeys());
+                        rightLeaf.getValues().addAll(leftLeaf.getValues());
+                        rightLeaf.getChildren().addAll(leftLeaf.getChildren());
+
+                        currentNode.setValues(rightLeaf.getValues());
+                        currentNode.setKeys(rightLeaf.getKeys());
+                        currentNode.setChildren(rightLeaf.getChildren());
+                    }else{
+                        parentNode.getChildren().remove(childPos);
+                        parentNode.getChildren().addAll(childPos,currentNode.getChildren());
+                    }
                 }
             }
         }
@@ -366,7 +418,7 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
                         parentNode.getKeys().remove(childPos-1);
                         parentNode.getValues().remove(childPos-1);
                         parentNode.numOfKeys--;
-                        checkIfMin(currentNode, keyPos);
+                        checkIfMin(parentNode, keyPos);
                     }else if (childPos + 1 < parentNode.getChildren().size()){
                         K keyToMoveDown = parentNode.getKeys().get(childPos);
                         V valueToMoveDown = parentNode.getValues().get(childPos);
@@ -387,11 +439,13 @@ public class BTreeNode <K extends Comparable <K>, V> implements IBTreeNode {
                         parentNode.getKeys().remove(childPos);
                         parentNode.getValues().remove(childPos);
                         parentNode.numOfKeys--;
-                        checkIfMin(currentNode, keyPos);
+                        checkIfMin(parentNode, keyPos);
                     }
                 }
             }
         }else{
+
+
             BTreeNode<K, V> predecessorNode = getPredecessorNode(currentNode.getChildren().get(keyPos));
             BTreeNode<K, V> successorNode = getSuccessorNode(currentNode.getChildren().get(keyPos+1));
 

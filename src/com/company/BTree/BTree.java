@@ -117,9 +117,11 @@ public class BTree <K extends Comparable<K>, V> implements IBTree {
         parent.getValues().set(position, (V)current.getValues().get(minimumDegree - 1));
         parent.setNumOfKeys(1 + parent.getNumOfKeys());
         for(int j = 0; j < minimumDegree; j++) {
+            if(!current.isLeaf())
+                current.getChildren().remove(current.getChildren().size() - 1);
             current.getKeys().remove(current.getKeys().size() - 1);
             current.getValues().remove(current.getValues().size() - 1);
-        }            
+        }
     }
 
     @Override
